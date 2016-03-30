@@ -1,9 +1,14 @@
-# Minimal [Sinatra](http://www.sinatrarb.com/) App with [Pushould](https://yhoshino11.github.io)
+# Minimal [Sinatra](http://www.sinatrarb.com/) App with [Pushould](https://pushould.com)
 
-#### 1. Create Account at pushoud.com
+#### 1. Create Account at [pushoud.com](https://pushould.com)
+```sh
+$ gem install pushould
+$ pushould signup
+```
+
+###### or with curl
 ```sh
 $ curl -X GET http://pushould.com/signup\?email\=your_awesome@email.com\&password\=your_awesome_password
-# { url: 'your_api_url', client_token: 'your_client_token', server_token: 'your_server_token' }
 ```
 
 #### 2. set environment variables
@@ -26,3 +31,6 @@ $ gem install sinatra
 $ gem install pushould-ruby
 $ ruby app.rb
 ```
+
+Finally, open up your browser at [localhost:4567](http://localhost:4567) and try
+sending a message.
