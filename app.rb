@@ -35,5 +35,5 @@ post '/comment' do
     room: 'private area',
     event: 'send',
     data: {
-      msg: 'new comment from sinatra' })
+      msg: params['msg'] })
 end

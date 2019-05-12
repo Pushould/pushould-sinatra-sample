@@ -1,20 +1,38 @@
 <html>
   <head>
+    <title>Pushould サンプル</title>
+    <meta charset='utf-8' />
   </head>
   <body>
+
     <h1>Hello world</h1>
+    <input id='comment__field' type='text' value='new comment from sinatra' />
+    <input id='comment__send__button' type='button' value='comment' />
     <ul id="message__list"></ul>
-    <input type='button' value='comment' />
+
+    <!-- Load Libraries -->
     <script type='text/javascript' src='/socket.io.min.js'></script>
     <script type='text/javascript' src='/jquery.min.js'></script>
     <script type='text/javascript' src='/pushould.js'></script>
-    <script type='text/javascript' src='/sample.js'></script>
+
     <script type='text/javascript'>
-      var pushould = new Pushould({ url: "127.0.0.1:3000" });
+      var pushould = new Pushould({ url: "<%= @url %>" });
       var channel = pushould.subscribe('private area');
       channel.bind('send', function(msg) {
           console.log(msg);
           $('ul#message__list').append('<li>' + msg.data.msg + '</li>')
+      });
+
+      $('input#comment__send__button').click(function() {
+        var commentText = $('input#comment__field').val();
+        if (commentText == '') return;
+        $.ajax({
+          type: 'POST',
+          url: '/comment',
+          data: {
+            msg: commentText
+          }
+        });
       });
     </script>
   </body>
