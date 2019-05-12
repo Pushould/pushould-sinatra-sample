@@ -1,18 +1,39 @@
-require 'tilt/erubis'
+require 'rest-client'
+require 'json'
 require 'sinatra'
-require 'pushould'
 
-pushould = Pushould.new(url: ENV['URL'], server_token: ENV['SERVER_TOKEN'], email: ENV['EMAIL'], password: ENV['PASSWORD'])
+PUSHOULD_URL = '127.0.0.1:3000'
+
+class Client
+  attr_reader :url
+
+  def initialize(url)
+    @url = url
+  end
+
+  def trigger(room: _room, event: _event, data: _data)
+    data = { room: room,
+             event: event,
+             custom: data }.to_json
+    RestClient::Resource.new(@url)
+                        .get(params: { data: data },
+                             content_type: 'application/json',
+                             accept: 'application/json')
+  end
+end
+
+pushould = Client.new(PUSHOULD_URL)
 
 get '/' do
-  @client_token = ENV['CLIENT_TOKEN']
-  @url = ENV['URL']
-  pushould.trigger(room: 'private area', event: 'send', data: { users: %w(your awesome users), msg: 'from sinatra' })
+  @url = PUSHOULD_URL
   erb :index
 end
 
 post '/comment' do
-  @client_token = ENV['CLIENT_TOKEN']
-  @url = ENV['URL']
-  pushould.trigger(room: 'private area', event: 'send', data: { msg: 'new comment from sinatra' })
+  @url = PUSHOULD_URL
+  pushould.trigger(
+    room: 'private area',
+    event: 'send',
+    data: {
+      msg: 'new comment from sinatra' })
 end
